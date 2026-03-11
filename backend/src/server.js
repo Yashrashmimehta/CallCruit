@@ -21,7 +21,7 @@ app.use('/api/inngest',serve({client: inngest, functions}));//all the inngest fu
 //meaning of serve here is that it will serve the functions defined in inngest.js file at the endpoint /api/inngest. so whenever we hit this endpoint with a POST request, it will trigger the corresponding function based on the event type in the request body.
 
 
-app.get('/yash',(req, res) => {
+app.get('/',(req, res) => {
     res.send('Hello World!');
 });
 
