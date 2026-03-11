@@ -1,7 +1,7 @@
 import { Inngest } from "inngest";
 import { connectDB } from "./db.js";
 import User from "../models/User.js";
-import { deleteStreamUser, upsertStreamUser } from "./stream.js";
+//import { deleteStreamUser, upsertStreamUser } from "./stream.js";
 
 //creating an inngest client for your application. using the app id:callcruit
 export const inngest = new Inngest({ id: "callcruit" });
