@@ -1,0 +1,63 @@
+3️⃣ serve(...)
+
+serve comes from the Inngest library.
+
+Example import:
+
+import { serve } from "inngest/express";
+
+This function creates the webhook handler that processes events from Inngest.
+
+So basically:
+
+serve() = webhook handler
+
+4️⃣ { client: inngest }
+
+This tells the handler:
+“Use this Inngest client configuration.”
+
+You created it earlier:
+
+export const inngest = new Inngest({ id: "callcruit" });
+
+So now Inngest knows:
+
+App name = callcruit
+
+5️⃣ { functions }
+
+This is the list of all Inngest functions your app has.
+
+Example:
+
+const functions = [
+  syncUser,
+  sendEmail,
+  generateReport
+]
+
+These functions were created using:
+
+inngest.createFunction(...)
+
+So Inngest registers them here.
+
+🔥 Complete Flow
+
+When everything runs:
+
+User signs up
+      ↓
+Clerk sends event
+      ↓
+Inngest receives event
+      ↓
+Inngest calls webhook
+POST /api/inngest
+      ↓
+Express server
+      ↓
+serve() processes event
+      ↓
+correct function runs
