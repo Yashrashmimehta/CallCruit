@@ -2,11 +2,20 @@
 import express from 'express';
 import { connectDB } from "./lib/db.js";
 import path from 'path';
+import {serve} from 'inngest/express';
 import { ENV } from './lib/env.js'; 
 const app = express();
 
 //gives the current directory path
 const __dirname = path.resolve();
+
+//middlewares
+//Helps to read JSON data from the frontend and makes it available in req.body
+app.use(express.json()); // Parse JSON request bodies
+app.use(cors({origin:ENV.CLIENT_URL,credentials:true})); // Enable CORS for the frontend URL
+
+app.use('/api/inngest',serve({client: inngest, functions}));//all the inngest functions will be available at this endpoint
+//meaning of serve here is that it will serve the functions defined in inngest.js file at the endpoint /api/inngest. so whenever we hit this endpoint with a POST request, it will trigger the corresponding function based on the event type in the request body.
 
 
 app.get('/yash',(req, res) => {
