@@ -1,7 +1,6 @@
 import { Inngest } from "inngest";
 import { connectDB } from "./db.js";
 import User from "../models/User.js";
-//import { deleteStreamUser, upsertStreamUser } from "./stream.js";
 
 //creating an inngest client for your application. using the app id:callcruit
 export const inngest = new Inngest({ id: "callcruit" });
@@ -20,20 +19,15 @@ const syncUser = inngest.createFunction(
 
     const { id, email_addresses, first_name, last_name, image_url } = event.data;
 
-    const newUser = {
-      clerkId: id,
-      email: email_addresses[0]?.email_address,
-      name: `${first_name || ""} ${last_name || ""}`,
-      profileImage: image_url,
-    };
+    if (!existingUser) {
+  await User.create({
+    clerkId: event.data.id,
+    email,
+    name: event.data.first_name,
+  });
+}
 
     await User.create(newUser);
-
-    await upsertStreamUser({
-      id: newUser.clerkId.toString(),
-      name: newUser.name,
-      image: newUser.profileImage,
-    });
   }
 );
 
