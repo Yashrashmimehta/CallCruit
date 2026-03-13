@@ -26,12 +26,22 @@ const syncUser = inngest.createFunction(
     // Check if user already exists
     const existingUser = await User.findOne({ clerkId: id });
 
-    if (!existingUser) {
-      await User.create({
+    if (!existingUser) { // Only create a new user if one doesn't already exist
+      const newUser = {
         clerkId: id,
         email: email,
         name: `${first_name} ${last_name}`,
         profileImage: image_url,
+      };
+
+      await User.create(newUser);
+      
+      //Add stream user as well
+      await upsertStreamUser({
+        id: newUser.clerkId.toString(), // Use Clerk ID as Stream user ID for consistency
+        name: newUser.name,
+        image: newUser.profileImage,
+        //why email is not 
       });
     }
 
@@ -48,8 +58,14 @@ const deleteUserFromDB = inngest.createFunction(
     await connectDB();
 
     const { id } = event.data;
-
-    await User.deleteOne({ clerkId: id });
+    //the below line ensures that the user is deleted from MongoDB based on their Clerk ID, which is stored in the `clerkId` field of the User model. This way, when a user is deleted in Clerk, we can find and remove the corresponding user in our MongoDB database using that unique identifier.
+    await User.deleteOne({ clerkId: id });// Delete the user from MongoDB and clerk?
+  
+    await deleteStreamUser(id.toString()); // Delete the corresponding Stream user
+    //why .toString() is used here
+    //ans .toString() is used to ensure that the ID is in string format, which is necessary because Stream user IDs are expected to be strings. Since the Clerk ID might be a different type (like an ObjectId or a number), converting it to a string ensures consistency when interacting with the Stream API.
+    //but where is it written that stream user ids should be string
+    //
 
     return { success: true };
   }
