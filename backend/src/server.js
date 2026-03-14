@@ -3,9 +3,15 @@ import express from 'express';
 import { connectDB } from "./lib/db.js";
 import path from 'path';
 import {serve} from 'inngest/express';
+
+import { clerkMiddleware } from "@clerk/express";
+
 import { ENV } from './lib/env.js'; 
 import {inngest,functions} from './lib/inngest.js';
 import cors from 'cors';
+
+import chatRoutes from "./routes/chatRoutes.js";
+//import sessionRoutes from "./routes/sessionRoute.js";
 
 const app = express();
 
@@ -17,9 +23,14 @@ const __dirname = path.resolve();
 app.use(express.json()); // Parse JSON request bodies
 app.use(cors({origin:ENV.CLIENT_URL,credentials:true})); // Enable CORS for the frontend URL
 
+app.use(clerkMiddleware()); // this adds auth field to request object: req.auth()
+
 app.use('/api/inngest',serve({client: inngest, functions}));//all the inngest functions will be available at this endpoint
 //meaning of serve here is that it will serve the functions defined in inngest.js file at the endpoint /api/inngest. so whenever we hit this endpoint with a POST request, it will trigger the corresponding function based on the event type in the request body.
 
+
+app.use("/api/chat", chatRoutes);
+//app.use("/api/sessions", sessionRoutes);
 
 app.get('/',(req, res) => {
     res.send('Hello World!');

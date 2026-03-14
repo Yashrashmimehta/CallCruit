@@ -1,0 +1,6 @@
+// //when we pass an array of middlewares to express ,it automatically flattens and executes them sequentially ,one by one. so in the below line ,first it will execute requireAuth middleware which will check if the user is authenticated or not and then it will execute the next middleware which is the callback function that sends the response. if the user is not authenticated, it will return a 401 error and will not execute the next middleware.
+
+
+// app.get('/video-calls',protectRoute,(req, res) => {
+// res.status(200).json({message:"This is the video calls endpoint, accessible only to authenticated users",user:req.user});
+ });
