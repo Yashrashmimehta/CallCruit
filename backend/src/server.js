@@ -11,7 +11,7 @@ import {inngest,functions} from './lib/inngest.js';
 import cors from 'cors';
 
 import chatRoutes from "./routes/chatRoutes.js";
-//import sessionRoutes from "./routes/sessionRoute.js";
+import sessionRoutes from "./routes/sessionRoutes.js";
 
 const app = express();
 
@@ -30,7 +30,7 @@ app.use('/api/inngest',serve({client: inngest, functions}));//all the inngest fu
 
 
 app.use("/api/chat", chatRoutes);
-//app.use("/api/sessions", sessionRoutes);
+app.use("/api/sessions", sessionRoutes);
 
 app.get('/',(req, res) => {
     res.send('Hello World!');

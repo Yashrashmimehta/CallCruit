@@ -44,7 +44,9 @@ const syncUser = inngest.createFunction(
         //why email is not 
       });
     }
-
+      //welcome email can be sent here using sendgrid or any email service provider
+      //code for sending email can be added here
+      
     // Important for Inngest to mark success
     return { success: true };
   }
